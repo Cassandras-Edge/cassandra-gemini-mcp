@@ -188,26 +188,3 @@ def resolve_text_urls(text: str) -> str:
     return text
 
 
-def format_response(result: dict) -> str:
-    """Format the parsed result into a readable string."""
-    if "error" in result:
-        return f"Error: {result['error']}"
-
-    output = [resolve_text_urls(result.get("text", ""))]
-
-    sources = result.get("sources", [])
-    if sources:
-        resolved_sources = resolve_all_urls(sources)
-        output.append("\n\nSources:")
-        for i, source in enumerate(resolved_sources, 1):
-            if isinstance(source, dict):
-                title = source.get("title", "Untitled")
-                url = source.get("url", "")
-                output.append(f"{i}. [{title}]({url})")
-            else:
-                output.append(f"{i}. {source}")
-
-    output.append("\n---")
-    output.append(f"To follow up, use interaction_id: {result.get('interaction_id', 'N/A')}")
-
-    return "\n".join(output)
