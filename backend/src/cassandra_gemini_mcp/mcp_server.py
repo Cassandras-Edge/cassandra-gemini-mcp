@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 
 from fastmcp import FastMCP
 
-from cassandra_mcp_auth import AclMiddleware, DiscoveryTransform
+from cassandra_mcp_auth import AclMiddleware
 from cassandra_gemini_mcp.auth import McpKeyAuthProvider, build_auth
 from cassandra_gemini_mcp.clients.gemini import GeminiClient
 from cassandra_gemini_mcp.config import Settings
@@ -84,8 +84,6 @@ def create_mcp_server(settings: Settings) -> FastMCP:
         "lifespan": lifespan,
         "middleware": [acl_mw] if acl_mw._enabled else [],  # noqa: SLF001
     }
-    if settings.code_mode:
-        mcp_kwargs["transforms"] = [DiscoveryTransform(service_id=SERVICE_ID)]
     if auth_provider:
         mcp_kwargs["auth"] = auth_provider
 
